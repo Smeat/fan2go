@@ -26,10 +26,6 @@ import (
 )
 
 func RunDaemon() {
-	if getProcessOwner() != "root" {
-		ui.Fatal("Fan control requires root permissions to be able to modify fan speeds, please run fan2go as root")
-	}
-
 	pers := persistence.NewPersistence(configuration.CurrentConfig.DbPath)
 
 	InitializeObjects()
