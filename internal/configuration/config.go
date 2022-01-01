@@ -110,12 +110,12 @@ func validateConfig() {
 
 func validateSensors(config *Configuration) {
 	for _, sensorConfig := range config.Sensors {
-		if sensorConfig.HwMon != nil && sensorConfig.File != nil {
+		if sensorConfig.HwMon != nil && sensorConfig.File != nil && sensorConfig.Command != nil {
 			ui.Fatal("Sensor %s: only one sensor type can be used per sensor definition block", sensorConfig.ID)
 		}
 
-		if sensorConfig.HwMon == nil && sensorConfig.File == nil {
-			ui.Fatal("Sensor %s: sub-configuration for sensor is missing, use one of: hwmon | file", sensorConfig.ID)
+		if sensorConfig.HwMon == nil && sensorConfig.File == nil && sensorConfig.Command == nil {
+			ui.Fatal("Sensor %s: sub-configuration for sensor is missing, use one of: hwmon | file | command", sensorConfig.ID)
 		}
 
 		if !isSensorConfigInUse(sensorConfig, config.Curves) {

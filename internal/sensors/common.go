@@ -13,8 +13,7 @@ type Sensor interface {
 	GetId() string
 
 	GetConfig() configuration.SensorConfig
-
-	// GetValue returns the current value of this sensor
+// GetValue returns the current value of this sensor
 	GetValue() (float64, error)
 
 	// GetMovingAvg returns the moving average of this sensor's value
@@ -35,6 +34,14 @@ func NewSensor(config configuration.SensorConfig) (Sensor, error) {
 		return &FileSensor{
 			Name:     config.ID,
 			FilePath: config.File.Path,
+			Config:   config,
+		}, nil
+	}
+
+	if config.Command != nil {
+		return &CommandSensor{
+			Name:     config.ID,
+			Cmd:      config.Command.Cmd,
 			Config:   config,
 		}, nil
 	}
