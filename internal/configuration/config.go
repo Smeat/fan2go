@@ -48,10 +48,15 @@ func InitConfig(cfgFile string) {
 			ui.Error("Couldn't detect home directory: %v", err)
 			os.Exit(1)
 		}
+		xdg_config_dir, found_config_dir := os.LookupEnv("XDG_CONFIG_HOME")
 
 		viper.AddConfigPath(".")
+		if found_config_dir {
+			viper.AddConfigPath(xdg_config_dir + "/fan2go")
+		}
 		viper.AddConfigPath(home)
 		viper.AddConfigPath("/etc/fan2go/")
+
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
