@@ -29,6 +29,7 @@ type Configuration struct {
 	Curves  []CurveConfig  `json:"curves"`
 
 	Statistics StatisticsConfig `json:"statistics"`
+	AllowNonRoot bool `json:"allowNonRoot"`
 }
 
 var CurrentConfig Configuration
@@ -66,6 +67,7 @@ func setDefaultValues() {
 	viper.SetDefault("TempRollingWindowSize", 50)
 	viper.SetDefault("RpmPollingRate", 1*time.Second)
 	viper.SetDefault("RpmRollingWindowSize", 10)
+	viper.SetDefault("allowNonRoot", false)
 
 	viper.SetDefault("ControllerAdjustmentTickRate", 200*time.Millisecond)
 

@@ -20,6 +20,10 @@ rpmRollingWindowSize: 10
 # The rate to update fan speed targets at
 controllerAdjustmentTickRate: 200ms
 
+# Allows fan2go to run without root permissions
+# The user who runs fan2go still needs to have the proper permissions, otherwise fan2go will fail
+allowNonRoot: false
+
 # A list of fans to control
 fans:
   # A user defined ID.

@@ -26,7 +26,7 @@ import (
 )
 
 func RunDaemon() {
-	if getProcessOwner() != "root" {
+	if getProcessOwner() != "root" && !configuration.CurrentConfig.AllowNonRoot {
 		ui.Fatal("Fan control requires root permissions to be able to modify fan speeds, please run fan2go as root")
 	}
 
