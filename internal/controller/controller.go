@@ -198,7 +198,19 @@ func (f *fanController) runInitializationSequence() (err error) {
 		// verify that we were successful in writing our desired PWM value
 		// otherwise, skip this PWM value
 		// TODO: this has to be done _always_, while the RPM measurements only make sense if the fan supports it
-		actualPwm := fan.GetPwm()
+		// wait for pwm to be written
+		maxWait := 2000
+		currWait := 0
+		actualPwm := 0
+		for currWait < maxWait {
+			actualPwm = fan.GetPwm()
+			if actualPwm != pwm {
+				time.Sleep(100 * time.Millisecond)
+				currWait += 100
+			} else {
+				break
+			}
+		}
 		if actualPwm != pwm {
 			ui.Debug("Actual PWM value differs from requested one, skipping. Requested: %d Actual: %d", pwm, actualPwm)
 			continue
@@ -383,12 +395,17 @@ func (f *fanController) updatePwmMap() {
 
 	// check every pwm value
 	for i := fans.MaxPwmValue; i >= fans.MinPwmValue; i-- {
-		fan.SetPwm(i)
-		time.Sleep(10 * time.Millisecond)
-		f.pwmMap[i] = fan.GetPwm()
+		//fan.SetPwm(i)
+		//time.Sleep(1200 * time.Millisecond)
+		//f.pwmMap[i] = fan.GetPwm()
+		f.pwmMap[i] = i
 	}
 
 	fan.SetPwm(f.pwmMap[fan.GetStartPwm()])
+	ui.Debug("Map for %s", fan.GetId())
+	for key, val := range f.pwmMap {
+		ui.Debug("Key: %d => Value: %d ", key, val)
+	}
 }
 
 func (f *fanController) updateDistinctPwmValues() {

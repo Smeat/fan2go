@@ -8,6 +8,7 @@ import (
 	"github.com/markusressel/fan2go/internal/util"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type HwMonFan struct {
@@ -82,6 +83,7 @@ func (fan *HwMonFan) SetRpmAvg(rpm float64) {
 
 func (fan HwMonFan) GetPwm() int {
 	value, err := util.ReadIntFromFile(fan.PwmOutput)
+	ui.Debug("Reading pwm from '%s' (%s) with val %d", fan.GetId(), fan.PwmOutput, value)
 	if err != nil {
 		value = MinPwmValue
 	}
@@ -89,8 +91,19 @@ func (fan HwMonFan) GetPwm() int {
 }
 
 func (fan *HwMonFan) SetPwm(pwm int) (err error) {
-	ui.Debug("Setting Fan PWM of '%s' to %d ...", fan.GetId(), pwm)
+	ui.Debug("Setting Fan PWM of '%s' (%s) to %d ...", fan.GetId(), fan.PwmOutput, pwm)
 	err = util.WriteIntToFile(pwm, fan.PwmOutput)
+	currWait := 0
+	actualPwm := 0
+	for currWait < fan.Config.PwmWriteDelay {
+		actualPwm = fan.GetPwm()
+		if actualPwm != pwm {
+			time.Sleep(100 * time.Millisecond)
+			currWait += 100
+		} else {
+			break
+		}
+	}
 	return err
 }
 

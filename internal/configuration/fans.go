@@ -7,6 +7,7 @@ type FanConfig struct {
 	Curve     string          `json:"curve"`
 	HwMon     *HwMonFanConfig `json:"hwMon,omitempty"`
 	File      *FileFanConfig  `json:"file,omitempty"`
+	PwmWriteDelay int         `json:"pwmWriteDelay,omitempty"`
 }
 
 type HwMonFanConfig struct {
